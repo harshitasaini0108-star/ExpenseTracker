@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #0d6efd, #6f42c1);
+            color: white;
+        }
+
+        .feature-card {
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .footer {
+            background-color: #212529;
+            color: white;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+            Expense Tracker
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">
+                        Login
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/register">
+                        Register
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+
+    <div class="container text-center">
+
+        <h1 class="display-3 fw-bold mb-3">
+            Expense Tracker
+        </h1>
+
+        <p class="lead mb-4">
+            Manage your daily expenses, track your budget,
+            visualize spending, and stay financially organized.
+        </p>
+
+        <a href="/register" class="btn btn-light btn-lg me-3">
+            Get Started
+        </a>
+
+        <a href="/login" class="btn btn-outline-light btn-lg">
+            Login
+        </a>
+
+    </div>
+
+</section>
+
+<!-- Features -->
+<section class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2>Features</h2>
+            <p class="text-muted">
+                Everything you need to manage expenses efficiently
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card shadow h-100 feature-card">
+                    <div class="card-body text-center">
+                        <h4>Expense Tracking</h4>
+                        <p>
+                            Add, edit and delete expenses with ease.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow h-100 feature-card">
+                    <div class="card-body text-center">
+                        <h4>Budget Monitoring</h4>
+                        <p>
+                            Compare spending against your budget.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow h-100 feature-card">
+                    <div class="card-body text-center">
+                        <h4>Analytics</h4>
+                        <p>
+                            Visualize expenses using charts and reports.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Statistics -->
+<section class="py-5">
+
+    <div class="container">
+
+        <div class="row text-center">
+
+            <div class="col-md-4">
+                <h2 class="fw-bold">100%</h2>
+                <p>Expense Visibility</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="fw-bold">24/7</h2>
+                <p>Budget Monitoring</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="fw-bold">Easy</h2>
+                <p>Financial Management</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Call To Action -->
+<section class="bg-primary text-white py-5">
+
+    <div class="container text-center">
+
+        <h2 class="mb-3">
+            Start Tracking Your Expenses Today
+        </h2>
+
+        <p class="mb-4">
+            Create an account and take control of your finances.
+        </p>
+
+        <a href="/register" class="btn btn-light btn-lg">
+            Create Account
+        </a>
+
+    </div>
+
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+
+    <div class="container text-center">
+
+        <p class="mb-0">
+            © 2026 Expense Tracker | Built with Flask & Bootstrap 5
+        </p>
+
+    </div>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
