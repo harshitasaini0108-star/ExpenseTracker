@@ -41,6 +41,8 @@ class Expense(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     date = db.Column(db.Date, nullable=False)
 
+with app.app_context():
+    db.create_all()
 
 @app.route("/")
 def home():
