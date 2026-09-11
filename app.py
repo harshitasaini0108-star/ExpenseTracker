@@ -1,3 +1,4 @@
+import os
 from flask import flash
 from io import BytesIO
 import csv
@@ -14,7 +15,10 @@ app = Flask(__name__)
 app.secret_key = "expense_tracker_secret_key"
 
 # Database Configuration
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///expense_tracker.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "DATABASE_URL",
+    "sqlite:///expense_tracker.db"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
