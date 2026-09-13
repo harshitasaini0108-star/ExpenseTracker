@@ -93,37 +93,6 @@ ExpenseTracker/
 
 ---
 
-## 📸 Screenshots
-
-### Home Page
-
-```md
-Add Screenshot Here
-```
-
-### Login Page
-
-```md
-Add Screenshot Here
-```
-
-### Dashboard
-
-```md
-Add Screenshot Here
-```
-
-### Expense List
-
-```md
-Add Screenshot Here
-```
-
-### Add Expense
-
-```md
-Add Screenshot Here
-```
 
 > Replace the placeholders above with actual screenshots from your project.
 
