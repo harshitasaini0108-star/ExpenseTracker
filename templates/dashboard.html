@@ -4,611 +4,542 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Expense Tracker Dashboard</title>
+<title>Dashboard | Expense Tracker</title>
 
+<!-- Bootstrap 5 & FontAwesome -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 
-<style>
+<!-- Pro Animations CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
 
-body{
-    background:#f4f7fc;
-    font-family:'Segoe UI',sans-serif;
+<style>
+body {
+    background: #0f172a;
+    color: #f8fafc;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
 }
 
 /* Sidebar */
-
-.sidebar{
-    position:fixed;
-    width:250px;
-    height:100vh;
-    background:#111827;
-    color:white;
-    padding:20px;
+.sidebar {
+    position: fixed;
+    width: 260px;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    color: white;
+    padding: 24px;
+    z-index: 100;
 }
 
-.sidebar h3{
-    font-weight:700;
-    margin-bottom:30px;
+.sidebar h3 {
+    font-weight: 800;
+    font-size: 1.4rem;
+    margin-bottom: 35px;
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.sidebar a{
-    display:block;
-    color:white;
-    text-decoration:none;
-    padding:12px;
-    margin-bottom:10px;
-    border-radius:10px;
-    transition:0.3s;
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-radius: 14px;
+    font-weight: 500;
+    transition: all 0.25s var(--ease-smooth);
 }
 
-.sidebar a.active{
-    background:#2563eb;
+.sidebar a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateX(4px);
 }
 
-/* Main */
-
-.main{
-    margin-left:270px;
-    padding:30px;
+.sidebar a.active {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
 }
 
-/* Navbar */
-
-.topbar{
-    background:white;
-    padding:15px 25px;
-    border-radius:15px;
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+/* Main Content */
+.main {
+    margin-left: 270px;
+    padding: 32px;
+    min-height: 100vh;
 }
 
-/* Cards */
-
-.stat-card{
-    border:none;
-    border-radius:20px;
-    color:white;
-    padding:25px;
-    transition:.3s;
+@media (max-width: 992px) {
+    .sidebar { position: relative; width: 100%; height: auto; }
+    .main { margin-left: 0; padding: 20px; }
 }
 
-.stat-card:hover{
-    transform:translateY(-5px);
+/* Topbar */
+.topbar {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 18px 28px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.blue{
-    background:linear-gradient(135deg,#2563eb,#38bdf8);
+/* Cards & Widgets */
+.chart-box {
+    background: rgba(30, 41, 59, 0.65);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    color: #f1f5f9;
 }
 
-.green{
-    background:linear-gradient(135deg,#10b981,#34d399);
+.stat-card {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 22px;
+    color: white;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
-.orange{
-    background:linear-gradient(135deg,#f59e0b,#fbbf24);
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
 }
 
-.red{
-    background:linear-gradient(135deg,#ef4444,#fb7185);
+.blue {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
 }
 
-.stat-card h2{
-    font-weight:700;
+.green {
+    background: linear-gradient(135deg, #065f46, #10b981);
 }
 
-/* Chart Box */
-
-.chart-box{
-    background:rgba(255,255,255,.95);
-    backdrop-filter:blur(12px);
-    border-radius:24px;
-    padding:25px;
-    box-shadow:0 15px 35px rgba(0,0,0,.08);
+.orange {
+    background: linear-gradient(135deg, #b45309, #f59e0b);
 }
 
-/* Buttons */
-
-.action-btn{
-    border-radius:12px;
+.red {
+    background: linear-gradient(135deg, #991b1b, #ef4444);
 }
 
+.stat-icon {
+    font-size: 26px;
+    opacity: 0.85;
+    margin-bottom: 12px;
+}
+
+.stat-card h2 {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 0;
+}
+
+.pulse-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    animation: pulseOnline 2s infinite;
+}
+
+@keyframes pulseOnline {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: #f1f5f9;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.table thead {
+    background: rgba(15, 23, 42, 0.5);
+    color: #94a3b8;
+}
+
+.list-group-item {
+    background: rgba(15, 23, 42, 0.4);
+    border-color: rgba(255, 255, 255, 0.06);
+    color: #e2e8f0;
+    transition: background 0.2s ease;
+}
+
+.list-group-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
 </style>
+
 </head>
 
 <body>
 
+<!-- Ambient Glow Orbs -->
+<div class="ambient-orb ambient-orb-1" style="opacity: 0.25;"></div>
+<div class="ambient-orb ambient-orb-2" style="opacity: 0.2;"></div>
+
 <!-- Sidebar -->
-
 <div class="sidebar">
-
     <h3>
-        💰 Expense Tracker
+        💎 Expense Tracker
     </h3>
 
     <a href="/dashboard" class="active">
         <i class="fa-solid fa-house"></i>
-        Dashboard
+        <span>Dashboard</span>
     </a>
 
     <a href="/add_expense">
-        <i class="fa-solid fa-plus"></i>
-        Add Expense
+        <i class="fa-solid fa-plus-circle"></i>
+        <span>Add Expense</span>
     </a>
 
     <a href="/view_expenses">
-        <i class="fa-solid fa-list"></i>
-        Expenses
+        <i class="fa-solid fa-receipt"></i>
+        <span>All Expenses</span>
     </a>
 
     <a href="/export_pdf">
-        <i class="fa-solid fa-file-export"></i>
-        Export PDF
+        <i class="fa-solid fa-file-pdf"></i>
+        <span>Export PDF</span>
     </a>
-     
-    
+
+    <a href="/export_csv">
+        <i class="fa-solid fa-file-csv"></i>
+        <span>Export CSV</span>
+    </a>
+
     <a href="/profile">
-        <i class="fa-solid fa-user"></i>
-        Profile
+        <i class="fa-solid fa-user-gear"></i>
+        <span>Profile & Budget</span>
     </a>
 
+    <hr style="border-color: rgba(255, 255, 255, 0.1); margin: 20px 0;">
 
-    <a href="/logout">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        Logout
+    <a href="/logout" style="color: #f87171;">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Logout</span>
     </a>
-
 </div>
 
 <!-- Main -->
-
 <div class="main">
+
+    <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-    {% for category, message in messages %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show">
-            {{ message }}
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-            </button>
-        </div>
-    {% endfor %}
-{% endif %}
-{% endwith %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show mb-4">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
 
     <!-- Top Bar -->
-
-<div class="topbar mb-4">
-
-    <h4>
-        Dashboard Overview
-    </h4>
-
-    <div class="d-flex align-items-center gap-3">
-
-        <span class="badge bg-success p-2">
-            Online
-        </span>
-
+    <div class="topbar mb-4 reveal">
         <div>
-            <small class="text-muted">
-                Logged In As
-            </small><br>
-
-            <strong>
-                {{ session['user_name'] }}
-            </strong>
+            <h4 class="fw-bold mb-0">Dashboard Overview</h4>
+            <small class="text-secondary">Track real-time spendings and budget goals</small>
         </div>
 
+        <div class="d-flex align-items-center gap-3">
+            <span class="d-flex align-items-center gap-2 px-3 py-1 rounded-pill" style="background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #4ade80; font-size: 13px;">
+                <span class="pulse-dot"></span> Live System
+            </span>
+
+            <div class="text-end">
+                <small class="text-secondary">Signed in as</small><br>
+                <strong class="text-white">{{ session['user_name'] }}</strong>
+            </div>
+        </div>
     </div>
 
-</div>
+    <!-- Welcome Banner & Health Bar -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 reveal delay-100">
+            <div class="chart-box h-100 d-flex flex-column justify-content-between" data-tilt>
+                <div>
+                    <h4 class="fw-bold mb-2">👋 Welcome back, {{ session['user_name'] }}!</h4>
+                    <p class="text-secondary mb-3">
+                        Here is a summary of your financial status and recent activity.
+                    </p>
+                </div>
 
-<!-- Welcome Banner -->
-
-<div class="chart-box mb-4">
-
-    <h3>
-        👋 Welcome, {{ session['user_name'] }}
-    </h3>
-
-    <p class="text-muted mb-0">
-        Here's your financial overview for today.
-    </p>
-
-</div>
-
-<!-- Smart Insights -->
-
-<div class="row mb-4">
-
-    <div class="col-md-6">
-
-        <div class="alert alert-success">
-
-            💰 Budget Usage:
-            {{ ((total_amount / budget) * 100 if budget > 0 else 0)|round }}%
-
+                <div class="d-flex gap-2">
+                    <a href="/add_expense" class="btn btn-primary rounded-pill px-4 btn-pulse">
+                        <i class="fa-solid fa-plus me-1"></i> Add Expense
+                    </a>
+                    <a href="/view_expenses" class="btn btn-outline-light rounded-pill px-4">
+                        <i class="fa-solid fa-list me-1"></i> View Records
+                    </a>
+                </div>
+            </div>
         </div>
 
+        <div class="col-md-6 reveal delay-200">
+            <div class="chart-box h-100" data-tilt>
+                <h5><i class="fa-solid fa-heart-pulse text-danger me-2"></i>Budget Health</h5>
+                {% set percent = ((total_amount / budget) * 100 if budget > 0 else 0)|round(1) %}
+
+                <div class="d-flex justify-content-between text-secondary mt-3 mb-1">
+                    <span>Budget Consumed</span>
+                    <strong class="{{ 'text-danger' if percent > 85 else 'text-info' }}">{{ percent }}%</strong>
+                </div>
+
+                <div class="progress" style="height: 18px; border-radius: 12px; background: rgba(255, 255, 255, 0.08);">
+                    <div
+                        class="progress-bar progress-bar-striped progress-bar-animated {{ 'bg-danger' if percent > 85 else ('bg-warning' if percent > 65 else 'bg-primary') }}"
+                        role="progressbar"
+                        data-width="{{ percent }}"
+                        style="width: 0%; transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-3 text-secondary small">
+                    <span>Spent: <strong class="text-white">₹ {{ total_amount|round(2) }}</strong></span>
+                    <span>Budget: <strong class="text-white">₹ {{ budget|round(2) }}</strong></span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-
-        <div class="alert alert-info">
-
-            🔥 Top Category:
-            {{ top_category }}
-
+    <!-- 4 Stats Cards with 3D Tilt & Count-up -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3 col-sm-6 reveal delay-100">
+            <div class="stat-card blue" data-tilt>
+                <div class="stat-icon"><i class="fa-solid fa-receipt"></i></div>
+                <h6 class="text-uppercase text-white-50 small fw-bold">Total Expenses</h6>
+                <h2 data-count="{{ total_expenses }}" data-prefix="">{{ total_expenses }}</h2>
+            </div>
         </div>
 
+        <div class="col-md-3 col-sm-6 reveal delay-200">
+            <div class="stat-card green" data-tilt>
+                <div class="stat-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                <h6 class="text-uppercase text-white-50 small fw-bold">Total Spent</h6>
+                <h2 data-count="{{ total_amount }}" data-prefix="₹ ">₹ {{ total_amount }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 reveal delay-300">
+            <div class="stat-card orange" data-tilt>
+                <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+                <h6 class="text-uppercase text-white-50 small fw-bold">Total Budget</h6>
+                <h2 data-count="{{ budget }}" data-prefix="₹ ">₹ {{ budget }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 reveal delay-400">
+            <div class="stat-card red" data-tilt>
+                <div class="stat-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+                <h6 class="text-uppercase text-white-50 small fw-bold">Remaining</h6>
+                <h2 data-count="{{ remaining }}" data-prefix="₹ ">₹ {{ remaining }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Charts -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 reveal delay-100">
+            <div class="chart-box" data-tilt>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fa-solid fa-chart-pie text-info me-2"></i>Expense by Category</h5>
+                    <span class="badge bg-primary rounded-pill">Breakdown</span>
+                </div>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 reveal delay-200">
+            <div class="chart-box" data-tilt>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fa-solid fa-chart-column text-success me-2"></i>Budget vs Spending</h5>
+                    <span class="badge bg-success rounded-pill">Status</span>
+                </div>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Trend & Recent Transactions -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-7 reveal delay-100">
+            <div class="chart-box" data-tilt>
+                <h5 class="mb-3"><i class="fa-solid fa-chart-line text-warning me-2"></i>Monthly Expense Trend</h5>
+                <div style="position: relative; height: 260px;">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5 reveal delay-200">
+            <div class="chart-box h-100" data-tilt>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i>Recent Activity</h5>
+                    <a href="/view_expenses" class="text-info small text-decoration-none">View All</a>
+                </div>
+
+                <ul class="list-group list-group-flush rounded-3">
+                    {% for expense in expenses[:5] %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                        <div>
+                            <strong class="text-white d-block">{{ expense.category }}</strong>
+                            <small class="text-secondary">{{ expense.date }}</small>
+                        </div>
+                        <span class="badge bg-danger rounded-pill px-3 py-2 fw-semibold">
+                            - ₹ {{ expense.amount }}
+                        </span>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-center text-secondary py-4">
+                        No transactions recorded yet.
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
 
 </div>
 
-    <!-- Stats -->
-    <div class="row mt-4">
-
-   <div class="col-md-6">
-    <div class="chart-box">
-
-<h5>Financial Health</h5>
-
-{% set percent = ((total_amount / budget) * 100 if budget > 0 else 0) %}
-
-<div class="progress mt-3" style="height:25px;border-radius:20px;">
-    <div
-        class="progress-bar progress-bar-striped progress-bar-animated"
-        role="progressbar"
-        aria-valuenow="{{ percent }}"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        data-width="{{ percent }}"
-        style="width: 0%;">
-        {{ percent }}%
-    </div>
-</div>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('[data-width]').forEach(function (bar) {
-            const rawWidth = bar.dataset.width;
-            if (rawWidth !== undefined && rawWidth !== '') {
-                const width = Math.min(parseFloat(rawWidth), 100);
-                bar.style.width = width + '%';
-                bar.setAttribute('aria-valuenow', String(width));
+document.addEventListener('DOMContentLoaded', () => {
+    // Fill progress bar smoothly
+    document.querySelectorAll('[data-width]').forEach((bar) => {
+        const rawWidth = parseFloat(bar.dataset.width) || 0;
+        setTimeout(() => {
+            bar.style.width = Math.min(rawWidth, 100) + '%';
+        }, 150);
+    });
+
+    const categories = {{ categories|tojson }};
+    const amounts = {{ amounts|tojson }};
+    const months = {{ months|tojson }};
+    const monthlyAmounts = {{ monthly_amounts|tojson }};
+
+    const palette = [
+        '#38bdf8', '#818cf8', '#34d399', '#f472b6',
+        '#fbbf24', '#a78bfa', '#f87171', '#2dd4bf'
+    ];
+
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
+
+    // 1. Pie Chart
+    const pieEl = document.getElementById('pieChart');
+    if (pieEl) {
+        new Chart(pieEl, {
+            type: 'doughnut',
+            data: {
+                labels: categories.length ? categories : ['No Data'],
+                datasets: [{
+                    data: amounts.length ? amounts : [1],
+                    backgroundColor: palette,
+                    borderWidth: 2,
+                    borderColor: '#1e293b'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true,
+                    duration: 1200
+                }
             }
         });
-    });
+    }
+
+    // 2. Bar Chart
+    const barEl = document.getElementById('barChart');
+    if (barEl) {
+        new Chart(barEl, {
+            type: 'bar',
+            data: {
+                labels: ['Spent', 'Remaining'],
+                datasets: [{
+                    label: 'Amount (₹)',
+                    data: [Number('{{ total_amount }}'), Number('{{ remaining }}')],
+                    backgroundColor: ['#ef4444', '#10b981'],
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                animation: { duration: 1200 }
+            }
+        });
+    }
+
+    // 3. Line Chart (Monthly Trend)
+    const lineEl = document.getElementById('lineChart');
+    if (lineEl) {
+        new Chart(lineEl, {
+            type: 'line',
+            data: {
+                labels: months.length ? months : ['This Month'],
+                datasets: [{
+                    label: 'Monthly Spending (₹)',
+                    data: monthlyAmounts.length ? monthlyAmounts : [Number('{{ total_amount }}')],
+                    borderColor: '#38bdf8',
+                    backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#38bdf8',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                animation: { duration: 1400 }
+            }
+        });
+    }
+});
 </script>
 
-<p class="mt-3 text-muted">
-    ₹ {{ total_amount }} spent out of ₹ {{ budget }}
-</p>
-        
-    </div>
-</div>
-    <div class="col-md-6">
-
-        <div class="chart-box">
-
-            <h5>Expense Summary</h5>
-
-            <h2 class="mt-3">
-                ₹ {{ total_amount }}
-            </h2>
-
-            <p class="text-muted">
-                Total Spending Recorded
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-    <div class="row g-4">
-
-        <div class="col-md-3">
-
-            <div class="stat-card blue">
-
-                <h6>Total Expenses</h6>
-
-                <h2>{{ total_expenses }}</h2>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="stat-card green">
-
-                <h6>Total Amount</h6>
-
-                <h2>₹ {{ total_amount }}</h2>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="stat-card orange">
-
-                <h6>Budget</h6>
-
-                <h2>₹ {{ budget }}</h2>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="stat-card red">
-
-                <h6>Remaining</h6>
-
-                <h2>₹ {{ remaining }}</h2>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Quick Actions -->
-
-    <div class="mt-5">
-
-        <a href="/add_expense" class="btn btn-primary action-btn">
-            Add Expense
-        </a>
-
-        <a href="/view_expenses" class="btn btn-success action-btn">
-            View Expenses
-        </a>
-
-        <a href="/export_pdf" class="btn btn-info action-btn">
-            Export PDF
-        </a>
-
-        <a href="/export_csv" class="btn btn-secondary action-btn">
-    Export CSV
-        </a>
-
-    </div>
-<div class="row mt-5">
-
-    <div class="col-md-12">
-
-        <div class="chart-box">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <h4>⚡ Money Flow Control Panel</h4>
-
-                <a href="/add_expense" class="btn btn-primary">
-                    + Record Transaction
-                </a>
-
-            </div>
-
-            <p class="text-muted mt-2">
-                Manage and monitor all your expense activities.
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-    <div class="row mt-4">
-    <div class="col-md-12">
-        <div class="chart-box">
-
-            <h4 class="mb-3">📋 Recent Transactions</h4>
-
-            <table class="table table-hover">
-
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    {% for expense in expenses[:5] %}
-
-                    <tr>
-                        <td>{{ expense.category }}</td>
-                        <td>₹ {{ expense.amount }}</td>
-                        <td>{{ expense.date }}</td>
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-    </div>
-</div>
-
-      <!-- Analytics -->
-
-    <div class="row mt-5">
-
-        <div class="col-md-6">
-
-            <div class="chart-box">
-
-                <h5>Expense Categories</h5>
-
-                <canvas id="pieChart"></canvas>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-6">
-
-            <div class="chart-box">
-
-                <h5>Budget Status</h5>
-
-                <canvas id="barChart"></canvas>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Monthly Expense Trend -->
-
-    <div class="row mt-5">
-
-    <!-- Notifications -->
-
-    <div class="col-md-4">
-
-        <div class="chart-box">
-
-            <h5>🔔 Notifications</h5>
-
-            <div class="alert alert-success">
-                Budget Remaining: ₹ {{ remaining }}
-            </div>
-
-            <div class="alert alert-info">
-                Total Expenses: {{ total_expenses }}
-            </div>
-
-            <div class="alert alert-warning">
-                Top Category: {{ top_category }}
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Recent Activity -->
-
-    <div class="col-md-8">
-
-        <div class="chart-box">
-
-            <h5>📌 Recent Activity</h5>
-
-            <ul class="list-group">
-
-                {% for expense in expenses[:5] %}
-
-                <li class="list-group-item">
-
-                    {{ expense.date }}
-                    -
-                    {{ expense.category }}
-                    -
-                    ₹ {{ expense.amount }}
-
-                </li>
-
-                {% endfor %}
-
-            </ul>
-
-        </div>
-
-    </div>
-
-</div>
-        <div class="col-md-12">
-
-            <div class="chart-box">
-    <h5>📈 Monthly Expense Trend</h5>
-    <canvas id="lineChart" height="100"></canvas>
-</div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-   const categories = JSON.parse('{{ categories|tojson|safe }}');
-const amounts = JSON.parse('{{ amounts|tojson|safe }}');
-const months = JSON.parse('{{ months|tojson|safe }}');
-const monthlyAmounts = JSON.parse('{{ monthly_amounts|tojson|safe }}');
-    // Pie Chart
-    new Chart(document.getElementById('pieChart'), {
-        type: 'pie',
-        data: {
-            labels: categories,
-            datasets: [{
-                data: amounts
-            }]
-        }
-    });
-// Bar Chart
-new Chart(document.getElementById('barChart'), {
-    type: 'bar',
-    data: {
-        labels: ['Spent', 'Remaining'],
-        datasets: [{
-            data: [
-                Number('{{ total_amount }}'),
-                Number('{{ remaining }}')
-            ]
-        }]
-    }
-}); 
-
-    // Line Chart
-  
-    new Chart(document.getElementById('lineChart'), {
-    type: 'line',
-    data: {
-        labels: ['Spent', 'Remaining'],
-        datasets: [{
-            data: [Number('{{ total_amount }}'),
-                   Number('{{ remaining }}')]
-        }]
-    }
-});                                
-
-</script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>                                    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</html>

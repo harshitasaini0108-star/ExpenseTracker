@@ -4,200 +4,243 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Profile Settings</title>
+<title>Profile & Budget | Expense Tracker</title>
 
+<!-- Bootstrap 5 & FontAwesome -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 
+<!-- Pro Animations CSS -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+
 <style>
-
-body{
-    min-height:100vh;
-    background:linear-gradient(135deg,#667eea,#764ba2,#6dd5ed);
-    font-family:'Segoe UI',sans-serif;
+body {
+    min-height: 100vh;
+    background-color: #0b1120;
+    color: #f1f5f9;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    padding: 50px 0;
 }
 
-.profile-card{
-    max-width:900px;
-    margin:auto;
-    margin-top:50px;
-    background:rgba(255,255,255,.15);
-    backdrop-filter:blur(20px);
-    border-radius:30px;
-    padding:35px;
-    box-shadow:0 25px 60px rgba(0,0,0,.25);
-    color:white;
+.profile-card {
+    max-width: 850px;
+    margin: auto;
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 32px;
+    padding: 40px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 10;
 }
 
-.avatar{
-    width:120px;
-    height:120px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#ff9a9e,#fad0c4);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:auto;
-    font-size:48px;
-    font-weight:700;
-    color:#222;
-    box-shadow:0 0 35px rgba(255,255,255,.5);
+.avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    font-size: 44px;
+    font-weight: 800;
+    color: white;
+    box-shadow: 0 0 35px rgba(59, 130, 246, 0.4);
+    position: relative;
 }
 
-.stat-box{
-    background:rgba(255,255,255,.12);
-    border-radius:20px;
-    padding:20px;
-    text-align:center;
-    margin-bottom:15px;
+.avatar::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    border-radius: 50%;
+    border: 2px solid rgba(56, 189, 248, 0.5);
+    animation: avatarPulse 2.5s infinite;
 }
 
-.form-control{
-    border:none;
-    border-radius:15px;
-    padding:12px;
+@keyframes avatarPulse {
+    0% { transform: scale(0.98); opacity: 0.8; }
+    50% { transform: scale(1.08); opacity: 0.2; }
+    100% { transform: scale(0.98); opacity: 0.8; }
 }
 
-.btn-custom{
-    border-radius:15px;
-    padding:12px;
-    font-weight:600;
+.stat-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
 }
 
-.info-card{
-    background:rgba(255,255,255,.12);
-    border-radius:20px;
-    padding:20px;
+.info-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    padding: 28px;
 }
 
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 14px 18px;
+    color: white;
+}
+
+.form-control:focus {
+    background: rgba(15, 23, 42, 0.85);
+    color: white;
+    border-color: #38bdf8;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.35);
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: white;
+}
 </style>
 </head>
 
 <body>
 
+<!-- Ambient Glowing Orbs -->
+<div class="ambient-orb ambient-orb-1"></div>
+<div class="ambient-orb ambient-orb-2"></div>
+
+<!-- Interactive Particle Canvas -->
+<canvas id="bg-canvas"></canvas>
+
 <div class="container">
 
-    <div class="profile-card">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-    {% for category, message in messages %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show mb-4">
-            {{ message }}
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-            </button>
+    <div class="profile-card reveal" data-tilt>
+
+        <!-- Top Navigation -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="/dashboard" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                <i class="fa-solid fa-arrow-left me-1"></i> Dashboard
+            </a>
+            <a href="/logout" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                <i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Logout
+            </a>
         </div>
-    {% endfor %}
-{% endif %}
-{% endwith %}
 
-        <div class="text-center">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show mb-4">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
 
+        <!-- Avatar & User Info -->
+        <div class="text-center mb-4">
             <div class="avatar">
                 {{ user.name[0]|upper }}
             </div>
-
-            <h2 class="mt-3">
-                {{ user.name }}
-            </h2>
-
-            <p>
-                {{ user.email }}
-            </p>
-
+            <h2 class="fw-bold mb-1">{{ user.name }}</h2>
+            <p class="text-secondary small">{{ user.email }}</p>
         </div>
 
-        <div class="row mt-4">
-
-            <div class="col-md-6">
-                <div class="stat-box">
-                    <h4>💰 Budget</h4>
-                    <h3>₹{{ user.budget }}</h3>
+        <!-- Metric Stat Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6 reveal delay-100">
+                <div class="stat-box" data-tilt>
+                    <small class="text-uppercase text-secondary fw-semibold">Allocated Budget</small>
+                    <h3 class="fw-bold text-success mt-2 mb-0" data-count="{{ user.budget }}" data-prefix="₹ ">
+                        ₹ {{ user.budget }}
+                    </h3>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="stat-box">
-                    <h4>👤 Account</h4>
-                    <h3>Active</h3>
+            <div class="col-md-6 reveal delay-200">
+                <div class="stat-box" data-tilt>
+                    <small class="text-uppercase text-secondary fw-semibold">Account Status</small>
+                    <h3 class="fw-bold text-info mt-2 mb-0">
+                        <i class="fa-solid fa-circle-check me-1"></i> Active Member
+                    </h3>
                 </div>
             </div>
-
         </div>
 
-        <div class="info-card mt-4">
+        <!-- Budget Settings Form -->
+        <div class="info-card mb-4">
+            <h5 class="fw-bold mb-3">
+                <i class="fa-solid fa-wallet text-primary me-2"></i>Adjust Monthly Budget
+            </h5>
 
-            <h4>
-                <i class="fa-solid fa-wallet"></i>
-                Budget Settings
-            </h4>
-
-            <form method="POST">
-
-                <div class="mt-3">
-
-                    <label class="mb-2">
-                        Monthly Budget
-                    </label>
-
+            <form method="POST" action="/profile">
+                <div class="mb-3">
+                    <label class="form-label">Set New Monthly Budget (₹)</label>
                     <input
                         type="number"
+                        step="100"
                         name="budget"
                         value="{{ user.budget }}"
                         class="form-control"
                         required>
-
                 </div>
 
                 <button
                     type="submit"
-                    class="btn btn-warning w-100 mt-3 btn-custom">
-
-                    <i class="fa-solid fa-floppy-disk"></i>
-                    Save Budget
-
+                    class="btn btn-save w-100 btn-pulse"
+                    data-loading-text="Updating Budget...">
+                    <i class="fa-solid fa-floppy-disk me-2"></i> Update Budget
                 </button>
-
             </form>
-
         </div>
 
-        <div class="alert alert-light mt-4 text-dark">
-
-            <strong>Tip:</strong>
-            Keep your monthly budget updated to track expenses effectively.
-
-        </div>
-
-        <div class="row mt-4 g-2">
-
+        <!-- Quick Links -->
+        <div class="row g-3">
             <div class="col-md-4">
-                <a href="/dashboard"
-                   class="btn btn-dark w-100 btn-custom">
-                    📊 Dashboard
+                <a href="/dashboard" class="btn btn-outline-light w-100 py-3 rounded-4">
+                    <i class="fa-solid fa-chart-pie me-1"></i> Dashboard
                 </a>
             </div>
-
             <div class="col-md-4">
-                <a href="/view_expenses"
-                   class="btn btn-success w-100 btn-custom">
-                    📋 Expenses
+                <a href="/view_expenses" class="btn btn-outline-light w-100 py-3 rounded-4">
+                    <i class="fa-solid fa-receipt me-1"></i> Expenses
                 </a>
             </div>
-
             <div class="col-md-4">
-                <a href="/export_pdf"
-                   class="btn btn-info w-100 btn-custom">
-                    📄 Export PDF
+                <a href="/export_pdf" class="btn btn-outline-light w-100 py-3 rounded-4">
+                    <i class="fa-solid fa-file-pdf me-1"></i> Export PDF
                 </a>
             </div>
-
         </div>
 
     </div>
 
 </div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
 
 </body>
 </html>

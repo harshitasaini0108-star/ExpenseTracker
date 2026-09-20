@@ -1,0 +1,314 @@
+/* ==========================================================
+   Expense Tracker – Pro Animations & Glassmorphic Design Suite
+   ========================================================== */
+
+:root {
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.25, 0.8, 0.25, 1);
+  --glow-primary: 0 0 25px rgba(37, 99, 235, 0.35);
+  --glow-accent: 0 0 30px rgba(124, 58, 237, 0.35);
+}
+
+/* ---------- 0. Background Canvas & Floating Ambient Glow ---------- */
+#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+}
+
+.ambient-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+  animation: floatOrb 18s ease-in-out infinite alternate;
+}
+
+.ambient-orb-1 {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, #38bdf8, #2563eb);
+  top: -100px;
+  left: -80px;
+  animation-duration: 22s;
+}
+
+.ambient-orb-2 {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, #ec4899, #8b5cf6);
+  bottom: -120px;
+  right: -100px;
+  animation-duration: 26s;
+}
+
+.ambient-orb-3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #10b981, #06b6d4);
+  top: 40%;
+  left: 60%;
+  animation-duration: 20s;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, 40px) scale(1.1); }
+  100% { transform: translate(-40px, 80px) scale(0.95); }
+}
+
+/* Ensure foreground content stays above canvas and orbs */
+.navbar, .hero, .sidebar, .main, .container, .expense-card, .login-card, .profile-card, .glass-card {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- 1. Smooth Scroll & Global Refinements ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
+[data-count] {
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+/* ---------- 2. 3D Tilt Cards with Hardware Acceleration ---------- */
+.tilt-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  will-change: transform;
+  transition: transform 0.15s ease-out, box-shadow 0.25s ease-out;
+}
+
+.tilt-inner {
+  transform: translateZ(24px);
+  transition: transform 0.2s var(--ease-smooth);
+}
+
+.stat-card, .feature-card, .chart-box, .glass-card, .expense-card, .login-card {
+  transition: transform 0.35s var(--ease-smooth), box-shadow 0.35s var(--ease-smooth);
+}
+
+.stat-card:hover, .feature-card:hover {
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.22) !important;
+}
+
+.chart-box:hover {
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-3px);
+}
+
+/* ---------- 3. Modern Shimmer & Glow Effects ---------- */
+.shimmer-badge {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-badge::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.25) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.25) 55%,
+    transparent 80%
+  );
+  transform: rotate(30deg) translateX(-100%);
+  animation: shimmerSweep 4.5s infinite ease-in-out;
+}
+
+@keyframes shimmerSweep {
+  0% { transform: rotate(30deg) translateX(-150%); }
+  35%, 100% { transform: rotate(30deg) translateX(150%); }
+}
+
+/* ---------- 4. Scroll & Entrance Reveal Animations ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s var(--ease-smooth), transform 0.75s var(--ease-smooth);
+  will-change: opacity, transform;
+}
+
+.reveal.reveal-left {
+  transform: translateX(-35px);
+}
+
+.reveal.reveal-right {
+  transform: translateX(35px);
+}
+
+.reveal.reveal-scale {
+  transform: scale(0.92);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* Stagger delays */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+
+/* ---------- 5. Button Press & Hover Micro-interactions ---------- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s var(--ease-smooth), box-shadow 0.2s var(--ease-smooth), background-color 0.2s ease, filter 0.2s ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.97);
+  filter: brightness(0.95);
+}
+
+.btn-pulse {
+  animation: pulseGlow 2.5s infinite;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); }
+  70% { box-shadow: 0 0 0 16px rgba(37, 99, 235, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+
+/* Ripple click effect */
+.ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: rippleAnim 0.6s linear;
+  background-color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+@keyframes rippleAnim {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ---------- 6. Live Interactive Form Focus & Inputs ---------- */
+.form-control, .form-select {
+  transition: all 0.25s var(--ease-smooth);
+}
+
+.form-control:focus, .form-select:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2) !important;
+}
+
+/* ---------- 7. Table Rows & Deletion Animations ---------- */
+.table tbody tr {
+  transition: background-color 0.2s ease, transform 0.2s var(--ease-smooth);
+}
+
+.table tbody tr:hover {
+  transform: scale(1.008);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  z-index: 2;
+  position: relative;
+}
+
+@keyframes rowSlideOut {
+  0% { opacity: 1; transform: translateX(0); max-height: 80px; }
+  50% { opacity: 0; transform: translateX(45px); }
+  100% { opacity: 0; transform: translateX(60px); max-height: 0; padding-top: 0; padding-bottom: 0; border: none; }
+}
+
+.leaving {
+  animation: rowSlideOut 0.42s var(--ease-smooth) forwards;
+  pointer-events: none;
+}
+
+/* ---------- 8. Flash Alerts Entrance & Exit ---------- */
+@keyframes alertEntrance {
+  from { opacity: 0; transform: translateY(-20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes alertExit {
+  from { opacity: 1; transform: scale(1); max-height: 100px; margin-bottom: 1rem; }
+  to   { opacity: 0; transform: scale(0.94); max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; border: 0; }
+}
+
+.alert {
+  animation: alertEntrance 0.5s var(--ease-smooth) backwards;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.alert.alert-leaving {
+  overflow: hidden;
+  animation: alertExit 0.4s var(--ease-smooth) forwards;
+}
+
+/* ---------- 9. Category Badges Floating Hover ---------- */
+.category-badge {
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.category-badge:hover {
+  transform: scale(1.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- 10. Real-time Preview Cards ---------- */
+.preview-pulse {
+  animation: gentlePulse 2s infinite ease-in-out;
+}
+
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* ---------- 11. Reduced Motion Preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  #bg-canvas, .ambient-orb {
+    display: none !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .tilt-card {
+    transform: none !important;
+  }
+}
