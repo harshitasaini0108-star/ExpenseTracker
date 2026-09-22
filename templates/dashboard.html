@@ -39,6 +39,7 @@ body {
     font-size: 1.4rem;
     margin-bottom: 35px;
     background: linear-gradient(135deg, #38bdf8, #818cf8);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -437,6 +438,17 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
 
+<script id="dashboard-data" type="application/json">
+{{ {
+    'categories': categories,
+    'amounts': amounts,
+    'months': months,
+    'monthlyAmounts': monthly_amounts,
+    'totalAmount': total_amount,
+    'remaining': remaining
+}|tojson }}
+</script>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // Fill progress bar smoothly
@@ -447,10 +459,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150);
     });
 
-    const categories = {{ categories|tojson }};
-    const amounts = {{ amounts|tojson }};
-    const months = {{ months|tojson }};
-    const monthlyAmounts = {{ monthly_amounts|tojson }};
+    const dashboardData = JSON.parse(document.getElementById('dashboard-data').textContent);
+    const { categories, amounts, months, monthlyAmounts, totalAmount, remaining } = dashboardData;
 
     const palette = [
         '#38bdf8', '#818cf8', '#34d399', '#f472b6',
@@ -498,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: ['Spent', 'Remaining'],
                 datasets: [{
                     label: 'Amount (₹)',
-                    data: [Number('{{ total_amount }}'), Number('{{ remaining }}')],
+                    data: [Number(totalAmount), Number(remaining)],
                     backgroundColor: ['#ef4444', '#10b981'],
                     borderRadius: 10
                 }]
@@ -521,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: months.length ? months : ['This Month'],
                 datasets: [{
                     label: 'Monthly Spending (₹)',
-                    data: monthlyAmounts.length ? monthlyAmounts : [Number('{{ total_amount }}')],
+                    data: monthlyAmounts.length ? monthlyAmounts : [Number(totalAmount)],
                     borderColor: '#38bdf8',
                     backgroundColor: 'rgba(56, 189, 248, 0.15)',
                     fill: true,
