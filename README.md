@@ -2,7 +2,7 @@
 
 A professional web-based **Expense Tracker Application** built with **Python, Flask, SQLAlchemy, Bootstrap, and PostgreSQL**. The application helps users manage expenses, track budgets, analyze spending patterns, and export reports.
 
-🌐 **Live Demo:** [https://expensetracker-s4f3.onrender.com](https://expensetracker-s4f3.onrender.com)
+
   ------                       
     upgrade Version    http://127.0.0.1:5000 
 ---
